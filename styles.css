@@ -1,0 +1,469 @@
+/* ===== RETRO GAME CONSTRAINTS ===== */
+
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #0a0a0a;
+    overflow: hidden;
+    font-family: 'Courier Prime', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #d0d0d0;
+}
+
+/* ===== GAME CONTAINER ===== */
+
+.game-container {
+    position: relative;
+    width: 640px;
+    height: 480px;
+    background: #000;
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.9),
+                0 0 60px rgba(32, 8, 64, 0.6);
+    overflow: hidden;
+    /* Rare full-screen flicker animation */
+    animation: screen-glitch 8s infinite;
+}
+
+/* ===== BACKGROUND: Dithered Graveyard Silhouette ===== */
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #1a1a3e 0%, #0f1628 50%, #050810 100%);
+    
+    /* SVG-style graveyard silhouette (minimal detail) */
+    background-image: 
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480"><defs><filter id="dither"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="1"/></filter></defs><rect width="640" height="480" fill="%231a1a3e"/><path d="M0 300 L50 250 L60 280 L90 240 L100 280 L130 260 L150 300 L200 270 L220 300 L260 250 L280 300 L320 220 L340 300 L380 240 L400 300 L440 260 L460 300 L500 250 L520 300 L560 270 L600 300 L640 280 L640 480 L0 480 Z" fill="%23223344" opacity="0.8" filter="url(%23dither)"/><circle cx="200" cy="120" r="40" fill="%23334455" opacity="0.4"/><circle cx="450" cy="100" r="35" fill="%23334455" opacity="0.3"/></svg>'),
+        linear-gradient(180deg, #1a1a3e 0%, #0f1628 50%, #050810 100%);
+    background-size: cover, cover;
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
+    z-index: 1;
+}
+
+/* ===== FOG LAYERS - Subtle Parallax Drift ===== */
+
+.fog-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120%;
+    height: 100%;
+    z-index: 2;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.fog-1 {
+    background: radial-gradient(ellipse at 20% 50%, rgba(80, 60, 120, 0.25) 0%, transparent 70%),
+                radial-gradient(ellipse at 80% 40%, rgba(60, 40, 100, 0.15) 0%, transparent 60%);
+    animation: fog-drift-1 32s infinite linear;
+}
+
+.fog-2 {
+    background: radial-gradient(ellipse at 70% 60%, rgba(100, 70, 140, 0.2) 0%, transparent 65%),
+                radial-gradient(ellipse at 30% 70%, rgba(70, 50, 110, 0.18) 0%, transparent 55%);
+    animation: fog-drift-2 48s infinite linear;
+    opacity: 0.6;
+}
+
+@keyframes fog-drift-1 {
+    0% {
+        transform: translateX(-20px);
+    }
+    50% {
+        transform: translateX(10px);
+    }
+    100% {
+        transform: translateX(-20px);
+    }
+}
+
+@keyframes fog-drift-2 {
+    0% {
+        transform: translateX(10px);
+    }
+    50% {
+        transform: translateX(-15px);
+    }
+    100% {
+        transform: translateX(10px);
+    }
+}
+
+/* ===== CRT FLICKER - Old Monitor Instability ===== */
+
+.crt-flicker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        0deg,
+        transparent 24%,
+        rgba(0, 0, 0, 0.05) 25%,
+        rgba(0, 0, 0, 0.05) 26%,
+        transparent 27%,
+        transparent 74%,
+        rgba(0, 0, 0, 0.05) 75%,
+        rgba(0, 0, 0, 0.05) 76%,
+        transparent 77%,
+        transparent
+    );
+    background-size: 100% 4px;
+    z-index: 5;
+    pointer-events: none;
+    animation: flicker-intensity 0.15s infinite;
+}
+
+@keyframes flicker-intensity {
+    0% {
+        opacity: 0.02;
+    }
+    5% {
+        opacity: 0.02;
+    }
+    10% {
+        opacity: 0.03;
+    }
+    15% {
+        opacity: 0.02;
+    }
+    50% {
+        opacity: 0.04;
+    }
+    55% {
+        opacity: 0.02;
+    }
+    100% {
+        opacity: 0.02;
+    }
+}
+
+@keyframes screen-glitch {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.95;
+    }
+}
+
+/* ===== GAME SCREEN (Letterbox effect) ===== */
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40px 60px;
+    border: 3px solid #2a2a5a;
+    background: rgba(10, 10, 30, 0.7);
+    z-index: 10;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+/* ===== NEW: STATE SCREEN BASE ===== */
+/* All state screens use this as a foundation */
+/* Only one screen is visible at a time (.active class) */
+
+.state-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40px 60px;
+    
+    /* ===== NEW: Fade transitions between states ===== */
+    /* 0.8s fade in/out for smooth state transitions */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease-in-out;
+}
+
+/* ===== NEW: Active state screen is visible and interactive ===== */
+.state-screen.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* END NEW STATE SCREEN STYLES */
+
+/* ===== NEW: BOOT STATE STYLES ===== */
+/* Black screen with "INITIALIZING..." text and hum sound */
+
+.boot-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.boot-text {
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: #6a6a9a;
+    text-transform: uppercase;
+    animation: boot-flicker 0.4s infinite;
+}
+
+/* Boot text flickers during initialization */
+@keyframes boot-flicker {
+    0%, 49% {
+        opacity: 1;
+    }
+    50%, 100% {
+        opacity: 0.5;
+    }
+}
+
+/* END BOOT STATE STYLES */
+
+/* ===== NEW: TITLE STATE STYLES ===== */
+/* Logo and menu appear but are not interactive yet */
+
+.title-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+/* Menu in title state is faded out and not interactive */
+#menu-preview .menu-item {
+    opacity: 0.5;
+}
+
+/* END TITLE STATE STYLES */
+
+/* ===== NEW: ACTIVE MENU STATE STYLES ===== */
+/* Menu is fully interactive and responsive */
+
+.menu-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+/* END ACTIVE MENU STATE STYLES */
+
+/* ===== NEW: TRANSITION STATE STYLES ===== */
+/* Fade to black screen shown when starting game */
+
+.transition-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.transition-text {
+    font-size: 16px;
+    letter-spacing: 3px;
+    color: #8a4a9e;
+    text-transform: uppercase;
+    animation: transition-pulse 1s infinite;
+}
+
+/* Transition text pulses in and out */
+@keyframes transition-pulse {
+    0%, 49% {
+        opacity: 1;
+    }
+    50%, 100% {
+        opacity: 0.3;
+    }
+}
+
+/* END TRANSITION STATE STYLES */
+
+/* ===== HEADER: Title & Subtitle ===== */
+
+.header {
+    text-align: center;
+    border-bottom: 2px solid #4a4a7a;
+    padding-bottom: 20px;
+}
+
+.title {
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #8a4a9e;
+    text-shadow: 
+        2px 2px 0 #000,
+        4px 4px 0 rgba(138, 74, 158, 0.3);
+    margin-bottom: 8px;
+    image-rendering: pixelated;
+}
+
+.subtitle {
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #6a6a9a;
+    text-transform: uppercase;
+}
+
+/* ===== LORE TEXT ===== */
+
+.lore {
+    text-align: center;
+    padding: 20px 0;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lore p {
+    font-size: 12px;
+    line-height: 1.6;
+    color: #7a7aaa;
+    letter-spacing: 0.5px;
+    font-style: italic;
+}
+
+/* ===== MENU BOX ===== */
+
+.menu-box {
+    background: transparent;
+    border: 2px solid #5a5a8a;
+    padding: 16px 20px;
+    margin: 0 20px;
+}
+
+.menu-item {
+    padding: 8px 12px;
+    margin: 4px 0;
+    font-size: 14px;
+    letter-spacing: 1px;
+    color: #a0a0d0;
+    cursor: pointer;
+    /* Smooth color transitions for menu navigation */
+    transition: background-color 0.1s, color 0.1s, border-left 0.1s;
+    display: flex;
+    align-items: center;
+}
+
+.menu-item .cursor {
+    display: inline-block;
+    width: 12px;
+    margin-right: 12px;
+    color: #8a4a9e;
+    font-weight: 700;
+}
+
+/* ===== BLINKING CURSOR - Active Menu Item ===== */
+
+.menu-item .cursor.blinking {
+    animation: cursor-blink 0.6s infinite;
+}
+
+@keyframes cursor-blink {
+    0%, 49% {
+        opacity: 1;
+    }
+    50%, 100% {
+        opacity: 0;
+    }
+}
+
+/* ===== Menu item active state ===== */
+.menu-item.active {
+    background-color: rgba(138, 74, 158, 0.3);
+    color: #d0a0ff;
+    border-left: 2px solid #8a4a9e;
+    padding-left: 18px;
+    /* Text glow effect for active item */
+    text-shadow: 0 0 8px rgba(138, 74, 158, 0.6);
+}
+
+/* ===== Menu item inactive/unselected state ===== */
+.menu-item:not(.active):not(.disabled) {
+    color: #6a6a8a;
+    opacity: 0.7;
+}
+
+.menu-item.disabled {
+    color: #5a5a7a;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.menu-item.disabled .cursor {
+    color: #5a5a7a;
+}
+
+/* ===== FOOTER ===== */
+
+.footer {
+    text-align: center;
+    border-top: 2px solid #4a4a7a;
+    padding-top: 16px;
+}
+
+.footer p {
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: #6a6a9a;
+    text-transform: uppercase;
+}
+
+/* ===== DITHERING EFFECT (CSS Pattern) ===== */
+
+@media (min-width: 0px) {
+    .screen::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.03) 2px, rgba(0, 0, 0, 0.03) 4px),
+            repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 0, 0, 0.03) 2px, rgba(0, 0, 0, 0.03) 4px);
+        pointer-events: none;
+        z-index: 20;
+    }
+}
+
+/* ===== RETRO PIXEL SCALING (Optional: for smaller screens) ===== */
+
+@media (max-width: 800px) {
+    .game-container {
+        width: 90vw;
+        height: 67.5vw;
+        max-width: 640px;
+        max-height: 480px;
+    }
+
+    .title {
+        font-size: 36px;
+    }
+
+    .menu-item {
+        font-size: 12px;
+    }
+}
