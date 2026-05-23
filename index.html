@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRYPTSTALKER</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Background with dithered graveyard silhouette -->
+        <div class="background"></div>
+
+        <!-- ===== FOG DRIFT LAYERS ===== -->
+        <!-- These create subtle parallax movement to simulate atmospheric drift -->
+        <div class="fog-layer fog-1"></div>
+        <div class="fog-layer fog-2"></div>
+        <!-- END FOG LAYERS -->
+
+        <!-- ===== CRT FLICKER OVERLAY ===== -->
+        <!-- Creates the classic scanline + occasional flicker effect of old monitors -->
+        <div class="crt-flicker"></div>
+        <!-- END CRT FLICKER -->
+
+        <!-- Game Screen (letterboxed retro feel) -->
+        <div class="screen">
+            <!-- ===== NEW: BOOT STATE SCREEN ===== -->
+            <!-- Black screen shown during initial boot sequence (2-3 seconds) -->
+            <!-- Contains subtle hum sound effect -->
+            <div id="boot-screen" class="state-screen active">
+                <div class="boot-content">
+                    <p class="boot-text">INITIALIZING...</p>
+                </div>
+            </div>
+            <!-- END BOOT SCREEN -->
+
+            <!-- ===== NEW: TITLE STATE SCREEN ===== -->
+            <!-- Logo and title appear after boot, before menu becomes interactive -->
+            <!-- Menu fades in but is not yet selectable -->
+            <div id="title-screen" class="state-screen">
+                <div class="title-content">
+                    <!-- Title Section -->
+                    <div class="header">
+                        <h1 class="title">CRYPTSTALKER</h1>
+                        <p class="subtitle">GRAVEYARD WORLD</p>
+                    </div>
+
+                    <!-- Lore Text -->
+                    <div class="lore">
+                        <p>A lone figure descends into an ancient graveyard,<br>drawn by whispers from forgotten crypts below.</p>
+                    </div>
+
+                    <!-- Menu Box (NOT interactive yet) -->
+                    <div class="menu-box" id="menu-preview">
+                        <div class="menu-item">
+                            <span class="cursor">▶</span> START GAME
+                        </div>
+                        <div class="menu-item disabled">
+                            <span class="cursor">·</span> CONTINUE
+                        </div>
+                        <div class="menu-item">
+                            <span class="cursor">·</span> OPTIONS
+                        </div>
+                        <div class="menu-item">
+                            <span class="cursor">·</span> EXIT
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END TITLE SCREEN -->
+
+            <!-- ===== NEW: ACTIVE MENU STATE SCREEN ===== -->
+            <!-- Same as title screen but menu is now fully interactive -->
+            <!-- Player can navigate and select options -->
+            <div id="active-menu-screen" class="state-screen">
+                <div class="menu-content">
+                    <!-- Title Section -->
+                    <div class="header">
+                        <h1 class="title">CRYPTSTALKER</h1>
+                        <p class="subtitle">GRAVEYARD WORLD</p>
+                    </div>
+
+                    <!-- Lore Text -->
+                    <div class="lore">
+                        <p>A lone figure descends into an ancient graveyard,<br>drawn by whispers from forgotten crypts below.</p>
+                    </div>
+
+                    <!-- Menu Box (NOW interactive) -->
+                    <div class="menu-box" id="menu">
+                        <div class="menu-item active" data-action="start">
+                            <span class="cursor blinking">▶</span> START GAME
+                        </div>
+                        <div class="menu-item disabled" data-action="continue">
+                            <span class="cursor">·</span> CONTINUE
+                        </div>
+                        <div class="menu-item" data-action="options">
+                            <span class="cursor">·</span> OPTIONS
+                        </div>
+                        <div class="menu-item" data-action="exit">
+                            <span class="cursor">·</span> EXIT
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Text (only visible in active menu state) -->
+                <div class="footer">
+                    <p>↑ ↓ SELECT  •  ENTER CONFIRM</p>
+                </div>
+            </div>
+            <!-- END ACTIVE MENU SCREEN -->
+
+            <!-- ===== NEW: GAME START TRANSITION SCREEN ===== -->
+            <!-- Fade to black before transitioning to game -->
+            <div id="transition-screen" class="state-screen">
+                <div class="transition-content">
+                    <p class="transition-text">ENTERING CRYPT...</p>
+                </div>
+            </div>
+            <!-- END TRANSITION SCREEN -->
+        </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT for State Management & Menu Navigation ===== -->
+    <!-- This script handles keyboard input, menu state management, and state transitions -->
+    <script src="state-manager.js"></script>
+    <!-- END JAVASCRIPT -->
+</body>
+</html>
