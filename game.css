@@ -1,0 +1,124 @@
+/* ===== CRYPTSTALKER GAME STYLES ===== */
+/* General gameplay styling, common elements used throughout the game */
+
+/* ===== CORRIDOR STATE STYLES ===== */
+
+.corridor-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.corridor-header {
+    text-align: center;
+    border-bottom: 2px solid #4a4a7a;
+    padding-bottom: 20px;
+}
+
+.corridor-header h2 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+    margin: 0;
+}
+
+.corridor-description {
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.corridor-description p {
+    font-size: 13px;
+    line-height: 1.8;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    font-style: italic;
+    margin: 0;
+}
+
+.corridor-actions {
+    text-align: center;
+    border-top: 2px solid #4a4a7a;
+    padding-top: 16px;
+}
+
+.action-prompt {
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: #ffffff;
+    text-transform: uppercase;
+    animation: action-pulse 1.5s infinite;
+    margin: 0;
+}
+
+@keyframes action-pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* ===== PLAYER HUD ELEMENTS (future use) ===== */
+
+.hud {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(10, 10, 30, 0.8);
+    border: 1px solid #4a4a7a;
+    padding: 10px 15px;
+    font-size: 11px;
+    color: #ffffff;
+    z-index: 100;
+}
+
+.hud-stat {
+    margin: 5px 0;
+}
+
+.hud-label {
+    color: #888;
+    display: inline-block;
+    width: 50px;
+}
+
+.hud-value {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+/* ===== TRANSITION SCREEN DISTORTION ===== */
+
+#transition-screen.active {
+    animation: transition-descend 2s ease-in-out forwards;
+}
+
+@keyframes transition-descend {
+    0% {
+        background: transparent;
+    }
+    30% {
+        background: rgba(0, 0, 0, 0.3);
+        transform: scale(1.02);
+    }
+    60% {
+        background: rgba(0, 0, 0, 0.7);
+        transform: scale(1.05);
+    }
+    100% {
+        background: rgba(0, 0, 0, 1);
+        transform: scale(1);
+    }
+}
+
+/* ===== PLACEHOLDER FOR FUTURE ELEMENTS ===== */
+/* Enemy encounter styles, item interaction styles, etc. will go here */
